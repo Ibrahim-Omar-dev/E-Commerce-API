@@ -10,8 +10,8 @@ namespace E_Commerce.Domain.IRepository
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity?> GetById(int id);
         Task<TEntity?> GetByName(string name);
-        Task<TEntity> Add(TEntity entity);
-        Task<bool> DeleteById(int id);
+        Task<TEntity> AddAsync(TEntity entity);
+        Task<bool> DeleteById(Guid id);
         Task<bool> DeleteByName(string name);
         Task<TEntity> Update(TEntity entity);
     }

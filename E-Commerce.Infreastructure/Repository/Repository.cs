@@ -14,14 +14,14 @@ namespace E_Commerce.Infreastructure.Repository
         {
             this.context = context;
         }
-        public async Task<TEntity> Add(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
             await context.AddAsync(entity);
             await context.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<bool> DeleteById(int id)
+        public async Task<bool> DeleteById(Guid id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace E_Commerce.Infreastructure.Repository
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return await context.Set<TEntity>().ToListAsync();
+            return await context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
         public async Task<TEntity?> GetById(int id)
