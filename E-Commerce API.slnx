@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="E-Commerce.Application/E-Commerce.Application.csproj" />
+  <Project Path="E-Commerce.Domain/E-Commerce.Domain.csproj" />
+  <Project Path="E-Commerce.Infreastructure/E-Commerce.Infreastructure.csproj" />
+  <Project Path="Presentation Layer/E-commerce.Presentation.csproj" />
+</Solution>
