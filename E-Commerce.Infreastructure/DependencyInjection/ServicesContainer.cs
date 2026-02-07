@@ -1,5 +1,7 @@
-﻿using E_Commerce.Domain.Entities;
+﻿using E_Commerce.Application.Services.Interfaces;
+using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.IRepository;
+using E_Commerce.Infrastructure.Logging;
 using E_Commerce.Infreastructure.Data;
 using E_Commerce.Infreastructure.MiddleWare;
 using E_Commerce.Infreastructure.Repository;
@@ -29,6 +31,7 @@ namespace E_Commerce.Infreastructure.DependencyInjection
                     }));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IAppLogger), typeof(SerlogLogger));
 
             return services;
         }

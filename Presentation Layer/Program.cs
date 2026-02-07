@@ -1,32 +1,55 @@
-using E_Commerce.Infreastructure.DependencyInjection;
 using E_Commerce.Application.DependencyInjection;
+using Serilog;
+using E_Commerce.Infreastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
-builder.Services.AddControllers();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.Console(
+        outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(
+        "Logs/log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 7)
+    .CreateLogger();
 
+builder.Host.UseSerilog();
+Log.Logger.Information("App Is building...........");
+
+builder.Services.AddControllers();
 builder.Services.AddInfreastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
- //Enable Swagger by default
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+try
 {
-    c.RoutePrefix = "swagger";   
-});
+    var app = builder.Build();
 
-app.MapGet("/", () => Results.Redirect("/swagger"));
+    app.UseSerilogRequestLogging();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.RoutePrefix = "swagger";
+    });
 
-app.UseInfreastructureServices();
-app.UseHttpsRedirection();
-app.UseAuthorization();
+    app.MapGet("/", () => Results.Redirect("/swagger"));
+    app.UseInfreastructureServices();
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
 
-app.MapControllers();
-
-app.Run();
+    Log.Logger.Information("App is Running..............");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Logger.Fatal(ex, "App Failed To Start..............");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

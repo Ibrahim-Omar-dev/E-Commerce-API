@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using E_Commerce.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -26,11 +29,13 @@ namespace E_Commerce.Infreastructure.MiddleWare
             {
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                var logger=context.RequestServices.GetRequiredService<IAppLogger>();
 
                 string message = "Database error occurred.";
 
                 if (ex.InnerException is SqlException innerException)
                 {
+                    logger.LogError("Sql Exception ", innerException);
                     switch (innerException.Number)
                     {
                         case 2627: // Unique constraint
@@ -49,6 +54,13 @@ namespace E_Commerce.Infreastructure.MiddleWare
                             message = "Unexpected database error.";
                             break;
                     }
+                }
+                else
+                {
+                    logger.LogError("EF related Error .......");
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    message = "An error occure While Saving the entity change";
+
                 }
                 var response = new
                 {
