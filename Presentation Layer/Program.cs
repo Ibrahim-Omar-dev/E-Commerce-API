@@ -1,21 +1,29 @@
+using E_Commerce.Infreastructure.DependencyInjection;
+using E_Commerce.Application.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+builder.Services.AddInfreastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+ //Enable Swagger by default
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.MapOpenApi();
-}
+    c.RoutePrefix = "swagger";   
+});
+
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

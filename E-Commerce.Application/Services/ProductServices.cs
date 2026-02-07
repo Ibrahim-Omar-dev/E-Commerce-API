@@ -6,7 +6,9 @@ using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.IRepository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace E_Commerce.Application.Services
 {
@@ -21,74 +23,89 @@ namespace E_Commerce.Application.Services
             this.repository = repository;
         }
 
-        public Task<ServicesResponse> AddAsync(CreateProduct product)
+        public async Task<ServicesResponse> AddAsync(CreateProduct product)
         {
             var productMap = mapper.Map<Product>(product);
-            var result = repository.AddAsync(productMap);
+            var result = await repository.AddAsync(productMap);
             if (result != null)
             {
-                return Task.FromResult(new ServicesResponse { IsSuccess = true, Message = "Product added successfully." });
+                return new ServicesResponse { IsSuccess = true, Message = "Product added successfully." };
             }
-            return Task.FromResult(new ServicesResponse { IsSuccess = false, Message = "Failed to add product." });
+            return new ServicesResponse { IsSuccess = false, Message = "Failed to add product." };
         }
 
-
-
-        public Task<ServicesResponse> DeleteById(Guid id)
+        public async Task<ServicesResponse> DeleteById(Guid id)
         {
-            var result = repository.DeleteById(id);
-            if (result != null)
+            var result = await repository.DeleteById(id);
+            if (result)
             {
-                return Task.FromResult(new ServicesResponse { IsSuccess = true, Message = "Product deleted successfully." });
+                return new ServicesResponse { IsSuccess = true, Message = "Product deleted successfully." };
             }
-            return Task.FromResult(new ServicesResponse { IsSuccess = false, Message = "product with this Id Was not found" });
-        }  
-
-        public Task<ServicesResponse> DeleteByName(string name)
-        {
-            var result = repository.DeleteByName(name);
-            if (result != null)
-            {
-                return Task.FromResult(new ServicesResponse { IsSuccess = true, Message = "Product deleted successfully." });
-            }
-            return Task.FromResult(new ServicesResponse { IsSuccess = false, Message = "product with this name was not found" });
+            return new ServicesResponse { IsSuccess = false, Message = "Product with this Id was not found" };
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<ServicesResponse> DeleteByName(string name)
         {
-            var result=await repository.GetAll();
-            if (result.Count() > 0)
+            var result = await repository.DeleteByName(name);
+            if (result)
+            {
+                return new ServicesResponse { IsSuccess = true, Message = "Product deleted successfully." };
+            }
+            return new ServicesResponse { IsSuccess = false, Message = "Product with this name was not found" };
+        }
+
+        public async Task<IEnumerable<GetProduct>> GetAll()
+        {
+            var result = await repository.GetAll();
+            if (result != null && result.Any())
             {
                 var resultMap = mapper.Map<IEnumerable<GetProduct>>(result);
-                return result;
+                return resultMap;
             }
-            return [];
+            return Enumerable.Empty<GetProduct>();
         }
 
-        public Task<Product?> GetById(int id)
+        public async Task<GetProduct?> GetById(Guid id)
         {
-            var result = repository.GetById(id);
-
-            var resultMap = mapper.Map<IEnumerable<GetProduct>>(result);
-            return result;
-        }
-
-        public Task<Product?> GetByName(string name)
-        {
-            var result = repository.GetByName(name);
-            var resultMap = mapper.Map<IEnumerable<GetProduct>>(result);
-            return result;
-        }
-
-        public Task<ServicesResponse> Update(UpdateProduct product)
-        {
-            var productMap = mapper.Map<Product>(product);
-            var result = repository.Update(productMap);
+            var result = await repository.GetById(id);
             if (result != null)
             {
-                return Task.FromResult(new ServicesResponse { IsSuccess = true, Message = "Product updated successfully." });
+                var resultMap = mapper.Map<GetProduct>(result);
+                return resultMap;
             }
-            return Task.FromResult(new ServicesResponse { IsSuccess = false, Message = "Failed to update product." });
+            return null;
+        }
+
+        public async Task<GetProduct?> GetByName(string name)
+        {
+            var result = await repository.GetByName(name);
+            if (result != null)
+            {
+                var resultMap = mapper.Map<GetProduct>(result);
+                return resultMap;
+            }
+            return null;
+        }
+
+        public async Task<ServicesResponse> Update(UpdateProduct product)
+        {
+            var productMap = mapper.Map<Product>(product);
+
+            var exists = await repository.GetByIdNoTracking(productMap.Id);
+            if (exists == null)
+            {
+                return new ServicesResponse
+                {
+                    IsSuccess = false,
+                    Message = "Product not found."
+                };
+            }
+
+            var result = await repository.Update(productMap);
+
+            return result
+                ? new ServicesResponse { IsSuccess = true, Message = "Product updated successfully." }
+                : new ServicesResponse { IsSuccess = false, Message = "Failed to update product." };
         }
     }
 }

@@ -1,0 +1,9 @@
+
+
+
+
+GET https://localhost:7133/api/Category
+Accept: application/json
+
+GET https://localhost:7133/api/Product
+Accept: application/json

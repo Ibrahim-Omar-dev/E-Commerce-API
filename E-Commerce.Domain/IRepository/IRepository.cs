@@ -8,11 +8,12 @@ namespace E_Commerce.Domain.IRepository
     public interface IRepository<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetAll();
-        Task<TEntity?> GetById(int id);
+        Task<TEntity?> GetById(Guid id);
+        Task<TEntity> GetByIdNoTracking(object id);
         Task<TEntity?> GetByName(string name);
         Task<TEntity> AddAsync(TEntity entity);
         Task<bool> DeleteById(Guid id);
         Task<bool> DeleteByName(string name);
-        Task<TEntity> Update(TEntity entity);
+        Task<bool> Update(TEntity entity);
     }
 }

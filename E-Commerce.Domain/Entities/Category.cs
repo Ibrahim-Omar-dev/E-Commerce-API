@@ -7,10 +7,10 @@ namespace E_Commerce.Domain.Entities
 {
     public class Category
     {
-        [Required]
+        [Key]
         public Guid Id { get; set; }
         [Required]
         public string? Name { get; set; }
-        public ICollection<Product> Products{ get; set; }
+        public ICollection<Product>? Products{ get; set; }
     }
 }

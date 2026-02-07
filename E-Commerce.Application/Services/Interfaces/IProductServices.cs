@@ -9,9 +9,9 @@ namespace E_Commerce.Application.Services.Interfaces
 {
     public interface IProductServices
     {
-        Task<IEnumerable<Product>> GetAll();
-        Task<Product?> GetById(int id);
-        Task<Product?> GetByName(string name);
+        Task<IEnumerable<GetProduct>> GetAll();
+        Task<GetProduct?> GetById(Guid id);
+        Task<GetProduct?> GetByName(string name);
         Task<ServicesResponse> AddAsync(CreateProduct product);
         Task<ServicesResponse> DeleteById(Guid id);
         Task<ServicesResponse> DeleteByName(string name);

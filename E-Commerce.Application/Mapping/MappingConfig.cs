@@ -15,7 +15,7 @@ namespace E_Commerce.Application.Mapping
             CreateMap<Category, GetCategory>().ReverseMap();
 
             CreateMap<CreateProduct, Product>().ReverseMap();
-            CreateMap<UpdateProduct, Product>().ReverseMap();
+            CreateMap<CreateCategory, Category>().ReverseMap();
 
             CreateMap<UpdateProduct, Product>().ReverseMap();
             CreateMap<UpdateCategory, Category>().ReverseMap();

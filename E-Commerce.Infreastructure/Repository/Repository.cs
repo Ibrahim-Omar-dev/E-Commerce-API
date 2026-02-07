@@ -71,7 +71,7 @@ namespace E_Commerce.Infreastructure.Repository
             return await context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<TEntity?> GetById(int id)
+        public async Task<TEntity?> GetById(Guid id)
         {
 
             return await context.Set<TEntity>().FindAsync(id);
@@ -79,23 +79,23 @@ namespace E_Commerce.Infreastructure.Repository
 
         public async Task<TEntity?> GetByName(string name)
         {
-            return await context.Set<TEntity>().FirstOrDefaultAsync(e => EF.Property<string>(e, "Name") == name);
+            return await context.Set<TEntity>().FirstOrDefaultAsync(e => EF.Property<string>(e, "Name").ToLower().Contains(name.ToLower()));
 
         }
 
-        public async Task<TEntity> Update(TEntity entity)
+        public async Task<TEntity> GetByIdNoTracking(object id)
         {
-            try
-            {
-                context.Set<TEntity>().Update(entity);
-                await context.SaveChangesAsync();
-
-                return entity;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return await context.Set<TEntity>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => EF.Property<object>(e, "Id").Equals(id));
         }
+
+        public async Task<bool> Update(TEntity entity)
+        {
+            context.Set<TEntity>().Update(entity);
+            var rowsAffected = await context.SaveChangesAsync();
+            return rowsAffected > 0;
+        }
+
     }
 }
