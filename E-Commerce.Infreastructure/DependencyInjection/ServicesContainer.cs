@@ -40,9 +40,9 @@ namespace E_Commerce.Infreastructure.DependencyInjection
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequiredLength = 8;
+                //options.Password.RequireUppercase = true;
+                //options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
 
                 //Lockout prevents brute-force attacks (trying many passwords until one works).
@@ -102,13 +102,13 @@ namespace E_Commerce.Infreastructure.DependencyInjection
                         return Task.CompletedTask;
                     }
                 };
-            }); 
+            });
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("admin"));
-            //    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("user"));
-            //});
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("admin"));
+                options.AddPolicy("RequireUserRole", policy => policy.RequireRole("user"));
+            });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IAppLogger), typeof(SerlogLogger));

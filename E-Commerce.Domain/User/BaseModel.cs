@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.Application.Dto.User
+﻿namespace E_Commerce.Domain.User
 {
     public class BaseModel
     {

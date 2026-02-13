@@ -9,7 +9,6 @@ namespace E_Commerce.Domain.Entities.Identity
     {
         [Key]
         public Guid UserId { get; set; }=Guid.NewGuid();
-        public string UserName { get; set; } = string.Empty;
        
     }
 }

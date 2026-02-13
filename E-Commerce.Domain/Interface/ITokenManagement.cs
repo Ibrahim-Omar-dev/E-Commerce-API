@@ -13,7 +13,7 @@ namespace E_Commerce.Domain.Interface
         Task<string> GetUserIdRefreshToken(string token);
         Task<bool>AddRefreshToken(string userId, string refreshToken);
         Task<bool>UpdateRefreshToken(string userId, string refreshToken);
-        string generateToken(List<Claim> claim);
+        string generateToken(IEnumerable<Claim> claim);
 
     }
 }

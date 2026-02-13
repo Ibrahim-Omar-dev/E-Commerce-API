@@ -1,6 +1,9 @@
 using E_Commerce.Application.DependencyInjection;
-using Serilog;
+using E_Commerce.Domain.Entities.Identity;
+using E_Commerce.Infrastructure.Seeder;
 using E_Commerce.Infreastructure.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,27 +22,50 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 Log.Logger.Information("App Is building...........");
 
-builder.Services.AddControllers();
+// Add services
 builder.Services.AddInfreastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.RespectRequiredConstructorParameters = true;
+    });
+
 try
 {
     var app = builder.Build();
 
-    app.UseSerilogRequestLogging();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    // Seed roles and admin user
+    using (var scope = app.Services.CreateScope())
     {
-        c.RoutePrefix = "swagger";
-    });
+        var services = scope.ServiceProvider;
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<AppUser>>();
+        await SeedRoles.SeedRolesAsync(roleManager, userManager);
+    }
+
+    app.UseSerilogRequestLogging();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.RoutePrefix = "swagger";
+        });
+    }
 
     app.MapGet("/", () => Results.Redirect("/swagger"));
-    app.UseInfreastructureServices();
     app.UseHttpsRedirection();
+
+    app.UseInfreastructureServices();
+    app.UseAuthentication();
     app.UseAuthorization();
+
     app.MapControllers();
 
     Log.Logger.Information("App is Running..............");

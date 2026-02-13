@@ -1,5 +1,6 @@
 ﻿using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Domain.Interface;
+using E_Commerce.Domain.User;
 using E_Commerce.Infreastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +20,20 @@ namespace E_Commerce.Infreastructure.Repository.Authentication
             this.context = context;
             this.roleManagement = roleManagement;
         }
-        public async Task<bool> CreateUser(AppUser user)
+        public async Task<bool> CreateUser(CreateUser createUser)
         {
-            var newUser = await GetUserByEmail(user.Email!);
-            if (newUser != null)
+            var existingUser = await GetUserByEmail(createUser.Email);
+            if (existingUser != null)
                 return false;
-             return (await userManager.CreateAsync(user!,user!.PasswordHash!)).Succeeded;
+
+            var user = new AppUser
+            {
+                UserName = createUser.UserName,
+                Email = createUser.Email,
+            };
+
+            var result = await userManager.CreateAsync(user, createUser.Password);
+            return result.Succeeded;
         }
 
         public async Task<bool> DeleteUserByEmail(string email)
@@ -69,15 +78,16 @@ namespace E_Commerce.Infreastructure.Repository.Authentication
             return claims;
         }
 
-        public async Task<bool> LoginUser(AppUser user)
+        public async Task<bool> LoginUser(LoginUser user)
         {
             var _user = await GetUserByEmail(user.Email!);
-            if (_user != null) return false;
+            if (_user == null) return false;
             string? roleName = await roleManagement.GetUserRole(_user!.Email!);
             if(string.IsNullOrEmpty(roleName)) return false;
 
-            return await userManager.CheckPasswordAsync(_user, user.PasswordHash!);
+            return await userManager.CheckPasswordAsync(_user, user.Password);
         }
+       
 
         public async Task<bool> UpdateUserByEmail(AppUser user, string email)
         {

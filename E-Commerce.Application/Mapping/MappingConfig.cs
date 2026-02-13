@@ -2,10 +2,9 @@
 using E_Commerce.Application.Categorys;
 using E_Commerce.Application.Dto.Categorys;
 using E_Commerce.Application.Dto.Product;
-using E_Commerce.Application.Dto.User;
 using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Entities.Identity;
-using DomainEntities = E_Commerce.Domain.Entities;
+using E_Commerce.Domain.User;
 
 namespace E_Commerce.Application.Mapping
 {
@@ -22,7 +21,8 @@ namespace E_Commerce.Application.Mapping
             CreateMap<UpdateProduct, Product>().ReverseMap();
             CreateMap<UpdateCategory, Category>().ReverseMap();
 
-            //CreateMap<AppUser, CreateUser>().ReverseMap();
+            CreateMap<AppUser, CreateUser>().ReverseMap();
+            CreateMap<AppUser, LoginUser>().ReverseMap();
         }
     }
 }

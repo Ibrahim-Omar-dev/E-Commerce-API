@@ -1,8 +1,6 @@
 ﻿using E_Commerce.Domain.Entities.Identity;
-using System;
-using System.Collections.Generic;
+using E_Commerce.Domain.User;
 using System.Security.Claims;
-using System.Text;
 
 namespace E_Commerce.Domain.Interface
 {
@@ -10,8 +8,8 @@ namespace E_Commerce.Domain.Interface
     {
         Task<AppUser> GetUserByEmail(string email);
         Task<AppUser> GetUserById(string Id);
-        Task<bool> CreateUser(AppUser user);
-        Task<bool> LoginUser(AppUser User);
+        Task<bool> CreateUser(CreateUser user);
+        Task<bool> LoginUser(LoginUser User);
         Task<bool> DeleteUserByEmail(string Email);
         Task<bool> UpdateUserByEmail(AppUser user, string Email);
         Task<IEnumerable<AppUser>> GetAllUser();

@@ -9,6 +9,8 @@ namespace E_Commerce.Domain.Entities.Identity
         public Guid Id { get; set; } = Guid.NewGuid();
         public string UserId { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
+        public DateTime ExpireDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
     }
 }

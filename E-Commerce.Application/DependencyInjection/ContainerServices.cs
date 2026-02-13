@@ -1,6 +1,8 @@
 ﻿using E_Commerce.Application.Mapping;
 using E_Commerce.Application.Services;
+using E_Commerce.Application.Services.Authentication;
 using E_Commerce.Application.Services.Interfaces;
+using E_Commerce.Application.Services.Interfaces.IAuthentication;
 using E_Commerce.Application.Validation;
 using E_Commerce.Application.Validation.Services;
 using FluentValidation;
@@ -20,6 +22,7 @@ namespace E_Commerce.Application.DependencyInjection
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<LoginUserValidation>();
             services.AddScoped<IValidationServices, ValidationServices>();
+            services.AddScoped<IAuthenticationServices, AuthenticationServices>();
             return services;
         }
     }
