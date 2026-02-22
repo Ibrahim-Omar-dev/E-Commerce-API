@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using E_Commerce.Application.Categorys;
+using E_Commerce.Application.Dto.Cart;
 using E_Commerce.Application.Dto.Categorys;
 using E_Commerce.Application.Dto.Product;
 using E_Commerce.Domain.Entities;
+using E_Commerce.Domain.Entities.Cart;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Domain.User;
 
@@ -23,6 +25,10 @@ namespace E_Commerce.Application.Mapping
 
             CreateMap<AppUser, CreateUser>().ReverseMap();
             CreateMap<AppUser, LoginUser>().ReverseMap();
+
+            CreateMap<GetPaymentMethod, PaymentMethod>().ReverseMap();
+
+            CreateMap<Achieve, CreateAcheive>().ReverseMap();
         }
     }
 }

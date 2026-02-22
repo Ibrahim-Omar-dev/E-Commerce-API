@@ -63,7 +63,7 @@ namespace Presentation_Layer.Controllers
             {
                 isSuccess = result.Issucess,
                 message = result.Message
-            })
+            });
         }
         
     }

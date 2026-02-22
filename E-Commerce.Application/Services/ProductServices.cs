@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Application.Services
 {
-    internal class ProductServices : IProductServices
+    public class ProductServices : IProductServices
     {
         private readonly IMapper mapper;
         private readonly IRepository<Product> repository;

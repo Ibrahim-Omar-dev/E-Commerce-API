@@ -1,13 +1,16 @@
 ﻿using E_Commerce.Application.Services.Interfaces;
+using E_Commerce.Application.Services.Interfaces.Cart;
 using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Domain.Interface;
+using E_Commerce.Domain.Interface.Cart;
 using E_Commerce.Domain.IRepository;
 using E_Commerce.Infrastructure.Logging;
 using E_Commerce.Infreastructure.Data;
 using E_Commerce.Infreastructure.MiddleWare;
 using E_Commerce.Infreastructure.Repository;
 using E_Commerce.Infreastructure.Repository.Authentication;
+using E_Commerce.Infreastructure.Repository.Cart;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -116,6 +119,9 @@ namespace E_Commerce.Infreastructure.DependencyInjection
             services.AddScoped<IUserManagement, UserManagement>();
             services.AddScoped<IRoleManagement, RoleManagement>();
             services.AddScoped<ITokenManagement, TokenManagement>();
+            services.AddScoped<IPaymentServices, StripePaymentMethod>();
+
+            Stripe.StripeConfiguration.ApiKey = config["Stripe:SecretKey"];
 
             return services;
         }
