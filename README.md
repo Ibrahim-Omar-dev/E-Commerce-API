@@ -59,7 +59,7 @@ E-Commerce API
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server)
 - [Stripe Account](https://stripe.com) (for payment features)
 
